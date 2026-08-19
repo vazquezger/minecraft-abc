@@ -15,24 +15,34 @@
     <img id="item-image" src="" alt="" />
     <div id="word-boxes"></div>
     <div class="mic-buttons">
-      <button id="btn-speak" title="Escuchar la palabra completa">🔊</button>
-      <button id="btn-speak-syl" title="Escuchar por sílabas">🔡</button>
+      <div class="mic-wrap">
+        <button id="btn-speak" title="Escuchar la palabra completa">🔊</button>
+        <span class="key-hint">1</span>
+      </div>
+      <div class="mic-wrap">
+        <button id="btn-speak-syl" title="Escuchar por sílabas">🔡</button>
+        <span class="key-hint">2</span>
+      </div>
       <button id="btn-voice" title="Cambiar voz">🗣️</button>
     </div>
     <button id="btn-next" title="Siguiente palabra">➡️</button>
   </div>
 
   <div id="alphabet"></div>
-  <p id="hint">Flechas + Enter, o escribí la letra directo. Espacio = escuchar la palabra.</p>
+  <p id="hint">Flechas + Enter, o escribí la letra directo. 1 = escuchar completa, 2 = por sílabas.</p>
 
   <div id="shelf"></div>
 
   <div id="connector-line"></div>
 
+  <div id="sparkles"></div>
+
+  <img id="dragon" src="../../assets/img/ender_dragon.gif" alt="" />
+
   <div id="victory">
     <div id="victory-card">
       <div>🏆</div>
-      <h2>¡Completaste las 5 palabras!</h2>
+      <h2 id="victory-text">¡Completaste todas las palabras!</h2>
       <button id="btn-again">Jugar de nuevo</button>
     </div>
   </div>

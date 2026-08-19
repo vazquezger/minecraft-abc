@@ -17,6 +17,30 @@ const btnSpeak = document.getElementById("btn-speak");
 const btnSpeakSyl = document.getElementById("btn-speak-syl");
 const btnVoice = document.getElementById("btn-voice");
 const btnNext = document.getElementById("btn-next");
+const sparklesEl = document.getElementById("sparkles");
+const dragonEl = document.getElementById("dragon");
+const victoryTextEl = document.getElementById("victory-text");
+
+function spawnSparkles() {
+  const rect = wordBoxesEl.getBoundingClientRect();
+  const icons = ["✨", "⭐", "🌟"];
+  for (let i = 0; i < 6; i++) {
+    const s = document.createElement("span");
+    s.className = "sparkle";
+    s.textContent = icons[Math.floor(Math.random() * icons.length)];
+    s.style.left = rect.left + Math.random() * rect.width + "px";
+    s.style.top = rect.top + rect.height / 2 + "px";
+    sparklesEl.appendChild(s);
+    setTimeout(() => s.remove(), 750);
+  }
+}
+
+function flyDragon() {
+  dragonEl.classList.remove("fly");
+  // reiniciar la animación forzando un reflow
+  void dragonEl.offsetWidth;
+  dragonEl.classList.add("fly");
+}
 
 totalEl.textContent = WORDS_PER_ROUND;
 
@@ -164,9 +188,6 @@ let currentBlank = -1; // next blank index (left to right) that must be filled
 let score = 0;
 let cursor = { row: 0, col: 0 };
 let locked = false; // true while a word is finishing up / transitioning
-let lastSpaceTime = 0;
-let spaceTimeout = null;
-const DOUBLE_PRESS_MS = 350;
 
 function maxColForRow(row) {
   return Math.min(COLS - 1, ALPHABET.length - 1 - row * COLS);
@@ -254,6 +275,17 @@ function renderWordBoxes() {
     wordBoxesEl.appendChild(box);
   }
   updateConnectorLine();
+  updateKeyHints();
+}
+
+function updateKeyHints() {
+  const word = sessionWords[currentIndex].word;
+  const wordLetters = new Set(word.split(""));
+  for (let i = 0; i < ALPHABET.length; i++) {
+    const key = alphabetEl.children[i];
+    if (!key) continue;
+    key.classList.toggle("dim", !wordLetters.has(ALPHABET[i]));
+  }
 }
 
 function shakeWordBox() {
@@ -264,12 +296,20 @@ function shakeWordBox() {
 }
 
 function addToShelf(entry) {
+  const item = document.createElement("div");
+  item.className = "shelf-item";
+
   const img = document.createElement("img");
   img.src = IMG_BASE + entry.img;
   img.alt = entry.word;
-  img.title = entry.word;
   img.onerror = () => (img.style.visibility = "hidden");
-  shelfEl.appendChild(img);
+
+  const label = document.createElement("span");
+  label.textContent = entry.word;
+
+  item.appendChild(img);
+  item.appendChild(label);
+  shelfEl.appendChild(item);
 }
 
 function rectEdgePoint(cx, cy, halfW, halfH, dirX, dirY) {
@@ -332,6 +372,8 @@ function selectLetter() {
       locked = true;
       btnNext.classList.add("show");
       connectorLine.style.opacity = "0";
+      spawnSparkles();
+      flyDragon();
     } else {
       renderWordBoxes();
     }
@@ -351,8 +393,10 @@ function goToNextWord() {
   locked = false;
 
   if (currentIndex >= sessionWords.length) {
+    victoryTextEl.textContent = `¡Completaste las ${sessionWords.length} palabras!`;
     victoryEl.classList.add("show");
     connectorLine.style.opacity = "0";
+    flyDragon();
     return;
   }
   loadWord(sessionWords[currentIndex]);
@@ -371,6 +415,14 @@ function startRound() {
 
 window.addEventListener("keydown", (e) => {
   if (victoryEl.classList.contains("show")) return;
+
+  // Si el foco quedó en un <button> (por un click previo), lo soltamos
+  // para que el teclado siga controlando el juego de forma consistente.
+  if (document.activeElement && document.activeElement.tagName === "BUTTON") {
+    document.activeElement.blur();
+  }
+
+  if (e.repeat) return; // ignorar auto-repetición al mantener una tecla apretada
 
   if (locked) {
     if (e.key === "ArrowRight" || e.key === "Enter") {
@@ -405,19 +457,14 @@ window.addEventListener("keydown", (e) => {
       e.preventDefault();
       selectLetter();
       break;
-    case " ": {
+    case "1":
       e.preventDefault();
-      const now = Date.now();
-      if (now - lastSpaceTime < DOUBLE_PRESS_MS) {
-        clearTimeout(spaceTimeout);
-        lastSpaceTime = 0;
-        btnSpeakSyl.click();
-      } else {
-        lastSpaceTime = now;
-        spaceTimeout = setTimeout(() => btnSpeak.click(), DOUBLE_PRESS_MS);
-      }
+      btnSpeak.click();
       break;
-    }
+    case "2":
+      e.preventDefault();
+      btnSpeakSyl.click();
+      break;
     default: {
       const letter = e.key.toUpperCase();
       const idx = ALPHABET.indexOf(letter);

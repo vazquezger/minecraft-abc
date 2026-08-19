@@ -23,7 +23,6 @@ const WORDS = [
   { word: "ORO", img: "oro.png", syl: ["O", "RO"] },
   { word: "HIERRO", img: "hierro.png", syl: ["HIE", "RRO"] },
   { word: "CARBON", img: "carbon.png", syl: ["CAR", "BON"] },
-  { word: "HACHA", img: "hacha.png", syl: ["HA", "CHA"] },
   { word: "PALA", img: "pala.png", syl: ["PA", "LA"] },
   { word: "PICO", img: "pico.png", syl: ["PI", "CO"] },
   { word: "VIDRIO", img: "vidrio.png", syl: ["VI", "DRIO"] },
