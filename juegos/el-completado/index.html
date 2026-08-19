@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Completado - Minecraft ABC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a href="../../index.html" class="back-link">⬅️ Menú</a>
+  <h1>🔥 El Completado</h1>
+  <div id="hud">🏆 <span id="score">0</span> / <span id="total">5</span></div>
+
+  <div id="board">
+    <img id="item-image" src="" alt="" />
+    <div id="word-boxes"></div>
+    <div class="mic-buttons">
+      <button id="btn-speak" title="Escuchar la palabra completa">🔊</button>
+      <button id="btn-speak-syl" title="Escuchar por sílabas">🔡</button>
+      <button id="btn-voice" title="Cambiar voz">🗣️</button>
+    </div>
+    <button id="btn-next" title="Siguiente palabra">➡️</button>
+  </div>
+
+  <div id="alphabet"></div>
+  <p id="hint">Flechas + Enter, o escribí la letra directo. Espacio = escuchar la palabra.</p>
+
+  <div id="shelf"></div>
+
+  <div id="connector-line"></div>
+
+  <div id="victory">
+    <div id="victory-card">
+      <div>🏆</div>
+      <h2>¡Completaste las 5 palabras!</h2>
+      <button id="btn-again">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <script src="words.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
